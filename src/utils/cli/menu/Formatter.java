@@ -11,6 +11,7 @@ public class Formatter {
 
     /**
      * Creates a Formatter
+     *
      * @param replacers a {@link Map} that maps a string to be replaced with the desired replacement.
      */
     public Formatter(Map<String, String> replacers) {
@@ -19,6 +20,7 @@ public class Formatter {
 
     /**
      * Applies all replacers to the given {@link String}
+     *
      * @param s The string to be formatted
      * @return The given string with all replacements applied
      */
@@ -33,7 +35,8 @@ public class Formatter {
 
     /**
      * Applies all replacers, those of the object and those passed in replacers, to the given {@link String}
-     * @param s The string to be formatted
+     *
+     * @param s         The string to be formatted
      * @param replacers The replacers that, in addition to those of this object, are to be applied to the string
      * @return The given string with all replacements applied
      */
