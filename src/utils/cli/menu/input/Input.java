@@ -1,62 +1,55 @@
 package utils.cli.menu.input;
 
-import java.util.HashSet;
+import utils.cli.exceptions.MenuException;
+
 import java.util.Scanner;
-import java.util.Set;
-import java.util.function.Predicate;
 
 /**
  * Fetches a single line on the console and handles it
  *
+ * The implementation of {@link Input#get(String)} must return the parsed and validated input
+ *
  * @param <T> The type of the input
  */
-public class Input<T> {
+public abstract class Input<T> {
     private final String prompt;
-    private final T input;
 
     private final Scanner scanner;
-    private final Set<Predicate<String>> checks = new HashSet<>();
 
     /**
-     * Creates an Input without any check.
+     * Creates an Input.
      *
      * @param prompt  The prompt text
      * @param scanner The scanner to be used to handle input
      */
     public Input(String prompt, Scanner scanner) {
         this.prompt = prompt;
-        this.input = null;
         this.scanner = scanner;
     }
 
-    /**
-     * Creates an Input and appends some checks to be made before it returning anything.
-     *
-     * @param prompt  The prompt text
-     * @param scanner The scanner to be used to handle input.
-     * @param checks  The Predicates to check if the user input is valid
-     */
-    public Input(String prompt, Scanner scanner, Set<Predicate<String>> checks) {
-        this(prompt, scanner);
-        this.checks.addAll(checks);
-    }
-
-    /**
-     * Reads the input and runs all validation checks.
-     *
-     * @return The input converted into the desired type
-     */
-    public T get() {
+    T validate() {
         while (true)
             try {
-                final String in = fetchLine();
+                final String data = fetchLine();
 
-                return ((T) in);
-            } catch (ClassCastException ignored) {
+                return get(data);
+            } catch (MenuException e) {
+                e.display();
             }
     }
 
+    /**
+     * Reads the console, validates and parses what the user typed.
+     * For an example implementation check {@link NumericInput}
+     *
+     * @return The input converted into the desired type
+     * @param data The input to be parsed
+     * @throws MenuException when the data is malformed, wrong or unexpected.
+     */
+    public abstract T get(String data) throws MenuException;
+
     private String fetchLine() {
+        System.out.print("\n" + prompt);
         return scanner.nextLine();
     }
 }
