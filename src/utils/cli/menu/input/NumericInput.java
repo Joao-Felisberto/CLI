@@ -13,6 +13,7 @@ public class NumericInput extends Input<Number> {
      *
      * @param prompt      The prompt text
      * @param scanner     The scanner to be used to handle input
+     * @param message     The message to be displayed so the user knows what input is expected
      * @param numberClass The class of the number to be given. It must be one of the below,
      *                    or else the {@link #get(String)} method will throw an {@link IllegalArgumentException}
      *                    <ul>
@@ -33,8 +34,8 @@ public class NumericInput extends Input<Number> {
      *                                       </li>
      *                    </ul>
      */
-    public NumericInput(String prompt, Scanner scanner, Class<? extends Number> numberClass) {
-        super(prompt, scanner);
+    public NumericInput(String prompt, Scanner scanner, String message, Class<? extends Number> numberClass) {
+        super(prompt, scanner, message);
         this.numberClass = numberClass;
     }
 

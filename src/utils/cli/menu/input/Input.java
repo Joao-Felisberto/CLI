@@ -11,31 +11,45 @@ import java.util.Scanner;
  *
  * @param <T> The type of the input
  */
-public abstract class Input<T> {
-    private final String prompt;
-
+public abstract class Input<T>{
     private final Scanner scanner;
+    private final String prompt;
+    private final String message;
 
     /**
      * Creates an Input.
-     *
      * @param prompt  The prompt text
      * @param scanner The scanner to be used to handle input
+     * @param message The message to be displayed so the user knows what input is expected
      */
-    public Input(String prompt, Scanner scanner) {
-        this.prompt = prompt;
+    public Input(String prompt, Scanner scanner, String message) {
         this.scanner = scanner;
+        this.prompt = prompt;
+        this.message = message;
     }
 
-    T validate() {
+    /**
+     * Asks for input, calls {@link #get(String)} and returns it's result.
+     * If {@link #get(String)} throws any error, this method will show the user that error.
+     * @return The parsed input
+     */
+    public T validate() {
         while (true)
             try {
-                final String data = fetchLine();
+                final String data = prompt();
 
                 return get(data);
             } catch (MenuException e) {
                 e.display();
             }
+    }
+
+    public String prompt() {
+        if (message != null)
+            System.out.println("\n" + message);
+
+        System.out.print(prompt);
+        return scanner.nextLine();
     }
 
     /**
@@ -46,10 +60,5 @@ public abstract class Input<T> {
      * @param data The input to be parsed
      * @throws MenuException when the data is malformed, wrong or unexpected.
      */
-    public abstract T get(String data) throws MenuException;
-
-    private String fetchLine() {
-        System.out.print("\n" + prompt);
-        return scanner.nextLine();
-    }
+    protected abstract T get(String data) throws MenuException;
 }

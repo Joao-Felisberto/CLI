@@ -1,28 +1,31 @@
 package utils.cli.menu.input;
 
-import utils.cli.exceptions.MenuException;
+import java.util.Scanner;
+import java.util.Set;
 
 /**
  * Handles the situations where validations require a plethora of input.
  * Can also be used when data to be handled is to be fetched in various phases from the user.
+ * <p>
+ * It is strongly encouraged to override {@link Input#validate()} and {@link Input#get(String)} in order to run all
+ * Input objects stored in this InputSequence.
  */
-public interface InputSequence<T> {
+public abstract class InputSequence<T> extends Input<T> {
+
+    private final Set<Input<?>> inputs;
 
     /**
-     * The validation of all inputs combined.
-     * @return The data gathered from all the user's input
-     * @throws MenuException when the input group given is malformed.
+     * Creates an InputSequence.
+     *
+     * @param prompt  The prompt text
+     * @param scanner The scanner to be used to handle input
      */
-    T validate() throws MenuException;
+    public InputSequence(String prompt, Scanner scanner, Set<Input<?>> inputs) {
+        super(prompt, scanner, null);
+        this.inputs = inputs;
+    }
 
-    /**
-     * Asks the user for data
-     * @param message The message explaining the data expected from the user
-     * @param input The Input object to handle the data
-     * @param <U> The return type of the input object's {@link Input#get(String)}
-     */
-    default <U> void ask(String message, Input<U> input) {
-        System.out.println(message);
-        input.validate();
+    public Set<Input<?>> getInputs() {
+        return inputs;
     }
 }
